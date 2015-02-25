@@ -1,0 +1,60 @@
+body {
+  background-color: #f8ffea;
+  zoom: 2;
+}
+#container {
+  margin: 1em auto;
+  width: 50%;
+  padding: 1em;
+  background-color: #fff;
+  border: 1px ridge #ccc;
+}
+.clearfix {
+  clear: both;
+}
+.muted {
+  font-size: 80%;
+  color: #ccc;
+}
+.row {
+  .clearfix;
+}
+.task-list {
+  list-style: none;
+}
+.task {
+
+  .delete {
+	display: none;
+	    &:before {
+      color: red;
+      content: "\2297";
+      font-size: 80%;
+    }
+  }
+
+  &:hover {
+  	.delete {
+  		display: inline;
+  	}
+  }
+
+  .status {
+    &:before {
+      content: "\25A1"
+    }
+  }
+  &.completed {
+  	font-size: 80%;
+  	color: #ccc;
+
+    .status {
+      &:before {
+        content: "\22A0"
+      }
+    }
+    .name {
+      text-decoration: line-through;
+    }
+  }
+}

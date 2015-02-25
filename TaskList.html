@@ -1,0 +1,17 @@
+<div class="TaskList">
+<ul class="task-list">
+  <li class="task" ng-repeat="task in tasks | filter:{name:filter}" ng-class="{ completed: task.complete }" ng-controller="TaskController">
+    <span class="status" ng-click="toggleComplete()"></span>
+    <span class="name" ng-bind="task.name"></span>
+    <span class="delete" ng-click="removeTask(task)"></span>
+  </li>
+  <li>
+    <form>
+      <input type="text" ng-model="newTask"/>
+      <button type="submit" ng-click="addTask(newTask); newTask = ''">Add</button>
+    </form>
+  </li>
+</ul>
+
+<button ng-click="clearCompleted()">Clear Completed</button>
+</div>
