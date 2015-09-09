@@ -109,40 +109,54 @@
         ];
       })
       
-      .controller('TaskActionsController', function($rootScope, $scope) {
-
+      .service('TasksService', function($rootScope) {
+        
+        var tasks = $rootScope.tasks;
+        
+        function add(task) {
+          tasks.push(task)
+        }
+        
         function clearCompleted() {
           
-          var tasks = $scope.tasks,
-              completed = tasks.filter(function(task) { 
+          var completed = tasks.filter(function(task) { 
                 return task.completed;
               });
           
           for(var i = 0; i < completed.length; i++) {
-              var index = tasks.indexOf(completed[i]);
-              tasks.splice(index, 1); 
+              deleteTask(completed[i]); 
           }
           
         }
         
-        $scope.clearCompleted = clearCompleted;
+        function deleteTask(task) {
+          tasks.splice(tasks.indexOf(task), 1);
+        }
+        
+        return {
+          add: add,
+          'delete': deleteTask,
+          clearCompleted: clearCompleted
+        }
+      })
+      
+      .controller('TaskActionsController', function($rootScope, $scope, TasksService) {
+        
+        $scope.clearCompleted = TasksService.clearCompleted;
 
         $scope.$watch('filter', function() {
           $rootScope.filter = $scope.filter;
         });
       })
       
-      .controller('TaskListController', function($scope) {
-        $scope.delete = function deleteTask(task) {
-          $scope.tasks.splice($scope.tasks.indexOf(task), 1)
-        }
+      .controller('TaskListController', function($scope, TasksService) {
+        $scope.delete = TasksService.delete;
       })
       
-      .controller('AddTaskController', function($scope) {
+      .controller('AddTaskController', function($scope, TasksService) {
         $scope.newTask = {};
-        
-        $scope.addTask = function addTask() {
-          $scope.tasks.push($scope.newTask);
+        $scope.addTask = function() {
+          TasksService.add($scope.newTask);
           $scope.newTask = {};
         }
       })
