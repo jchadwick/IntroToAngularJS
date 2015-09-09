@@ -13,6 +13,34 @@
   -->
   <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.css">
+  <style>
+    [ng-view].ng-enter {
+      -webkit-transition: .3s linear all;
+      /* Safari/Chrome */
+      -moz-transition: .3s linear all;
+      /* Firefox */
+      -o-transition: .3s linear all;
+      /* Opera */
+      transition: .3s linear all;
+      /* IE10+ and Future Browsers */
+    }
+    /**
+  * Pre animation -> enter
+  */
+    
+    [ng-view].ng-enter {
+      /* The animation preparation code */
+      opacity: 0;
+    }
+    /**
+  * Post animation -> enter
+  */
+    
+    [ng-view].ng-enter.ng-enter-active {
+      /* The animation code itself */
+      opacity: 1;
+    }
+  </style>
 </head>
 
 <body ng-app="TodoApp">
@@ -33,7 +61,7 @@
   <script src="lib/angular/angular-animate.min.js"></script>
   <script src="lib/angular/angular-route.min.js"></script>
   <script type="text/javascript">
-    angular.module('TodoApp', ['ngRoute'])
+    angular.module('TodoApp', ['ngRoute', 'ngAnimate'])
       .config(function($routeProvider) {
         
         $routeProvider
