@@ -19,18 +19,10 @@
 
   <div class="container">
     <div class="header clearfix">
-      <h1>AngularJS Todo List</h1>
+      <h1><a href="#/view">AngularJS Todo List</a></h1>
     </div>
     <div class="row">
-      <div class="panel panel-default clearfix">
-        <div class="panel-heading clearfix">
-          <div class="task-actions"></div>
-        </div>
-        <div class="panel-body">
-          <task-list></task-list>
-          <div add-task></div>
-        </div>
-      </div>
+      <div ng-view></div>
     </div>
   </div>
 
@@ -38,8 +30,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
   -->
   <script src="lib/angular/angular.min.js"></script>
+  <script src="lib/angular/angular-animate.min.js"></script>
+  <script src="lib/angular/angular-route.min.js"></script>
   <script type="text/javascript">
-    angular.module('TodoApp', [])
+    angular.module('TodoApp', ['ngRoute'])
+      .config(function($routeProvider) {
+        
+        $routeProvider
+          .when('/view', {
+            templateUrl: 'views/TasksView.html',
+            controller: 'TaskListController'
+          })
+          .when('/edit', {
+            templateUrl: 'views/TaskEditor.html'
+          })
+          .otherwise('/view')
+        
+      })
   </script>
   <script type="text/javascript" src="components/TasksService.js"></script>
   <script type="text/javascript" src="components/AddTask/AddTask.js"></script>

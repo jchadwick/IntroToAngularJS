@@ -1,0 +1,13 @@
+<ul class="list-group" style="font-size: 150%">
+
+	<li class="list-group-item" ng-click="task.completed = !task.completed" ng-repeat="task in tasks | filter: {completed:false}"
+	ng-class="{ active: task.completed }">
+		<i ng-if="task.completed" class="fa fa-check"></i>
+		<span class="name">{{task.name}}</span>
+	</li>
+
+</ul>
+
+<add-task></add-task>
+<hr>
+<a href="#/edit" class="btn btn-default btn-sm" role="btn">Edit task list</a>

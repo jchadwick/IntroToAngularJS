@@ -1,11 +1,12 @@
 function TasksService($rootScope) {
 
 	var tasks = [
-		{ name: 'Incomplete task' },
-		{ name: 'Second task' }
+		{ name: 'Incomplete task', completed: false },
+		{ name: 'Second task', completed: false }
 	];
 
 	function add(task) {
+		task.completed = false;
 		tasks.push(task);
 		_triggerChange();
 	}
