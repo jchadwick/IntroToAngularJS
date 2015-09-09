@@ -13,25 +13,6 @@
   -->
   <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.css">
-
-  <style type="text/css">
-    .ng-hide,
-    [ng-hide],
-    .ng-cloak,
-    [ng-cloak] {
-      display: none;
-    }
-    
-    .delete {
-      visibility: hidden;
-      color: red;
-    }
-    
-    .completed .delete {
-      visibility: visible;
-    }
-  </style>
-
 </head>
 
 <body ng-app="TodoApp">
@@ -43,11 +24,11 @@
     <div class="row">
       <div class="panel panel-default clearfix">
         <div class="panel-heading clearfix">
-          <div ng-include="'views/TaskActions.html'"></div>
+          <div class="task-actions"></div>
         </div>
         <div class="panel-body">
-          <div ng-include="'views/TaskList.html'"></div>
-          <div ng-include="'views/AddTask.html'"></div>
+          <task-list></task-list>
+          <div add-task></div>
         </div>
       </div>
     </div>
@@ -59,84 +40,11 @@
   <script src="lib/angular/angular.min.js"></script>
   <script type="text/javascript">
     angular.module('TodoApp', [])
-        
-      .service('TasksService', function($rootScope) {
-        
-        var tasks = [ 
-          { name: 'Incomplete task' }, 
-          { name: 'Second task'} 
-        ];
-        
-        function add(task) {
-          tasks.push(task);
-          _triggerChange();
-        }
-        
-        function clearCompleted() {
-          
-          var completed = tasks.filter(function(task) { 
-                return task.completed;
-              });
-          
-          for(var i = 0; i < completed.length; i++) {
-            var task = completed[i];
-            tasks.splice(tasks.indexOf(task), 1);
-          }
-          
-          _triggerChange();
-        }
-        
-        function deleteTask(task) {
-          tasks.splice(tasks.indexOf(task), 1);
-          _triggerChange();
-        }
-        
-        function getAll() {
-          return tasks;
-        }
-        
-        function _triggerChange() {
-          $rootScope.$broadcast('tasksChanged');
-        }
-        
-        return {
-          add: add,
-          'delete': deleteTask,
-          clearCompleted: clearCompleted,
-          getAll: getAll
-        }
-      })
-      
-      .controller('TaskActionsController', function($rootScope, $scope, TasksService) {
-        
-        $scope.clearCompleted = TasksService.clearCompleted;
-
-        $scope.$watch('filter', function() {
-          $rootScope.$broadcast('filterChanged', {filter: $scope.filter });
-        });
-      })
-      
-      .controller('TaskListController', function($scope, TasksService) {
-        $scope.tasks = TasksService.getAll();
-        $scope.delete = TasksService.delete;
-        
-        $scope.$on('tasksChanged', function() {
-          $scope.tasks = TasksService.getAll();
-        })
-
-        $scope.$on('filterChanged', function(evt, args) {
-          $scope.filter = args.filter;
-        })
-      })
-      
-      .controller('AddTaskController', function($scope, TasksService) {
-        $scope.newTask = {};
-        $scope.addTask = function() {
-          TasksService.add($scope.newTask);
-          $scope.newTask = {};
-        }
-      })
   </script>
+  <script type="text/javascript" src="components/TasksService.js"></script>
+  <script type="text/javascript" src="components/AddTask/AddTask.js"></script>
+  <script type="text/javascript" src="components/TaskActions/TaskActions.js"></script>
+  <script type="text/javascript" src="components/TaskList/TaskList.js"></script>
 </body>
 
 </html>
