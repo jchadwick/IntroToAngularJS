@@ -101,20 +101,17 @@
   <script src="lib/angular/angular.min.js"></script>
   <script type="text/javascript">
     angular.module('TodoApp', [])
-    
-      .run(function($rootScope) {
-        $rootScope.tasks = [ 
+        
+      .service('TasksService', function($rootScope) {
+        
+        var tasks = [ 
           { name: 'Incomplete task' }, 
           { name: 'Second task'} 
         ];
-      })
-      
-      .service('TasksService', function($rootScope) {
-        
-        var tasks = $rootScope.tasks;
         
         function add(task) {
-          tasks.push(task)
+          tasks.push(task);
+          _triggerChange();
         }
         
         function clearCompleted() {
@@ -124,19 +121,31 @@
               });
           
           for(var i = 0; i < completed.length; i++) {
-              deleteTask(completed[i]); 
+            var task = completed[i];
+            tasks.splice(tasks.indexOf(task), 1);
           }
           
+          _triggerChange();
         }
         
         function deleteTask(task) {
           tasks.splice(tasks.indexOf(task), 1);
+          _triggerChange();
+        }
+        
+        function getAll() {
+          return tasks;
+        }
+        
+        function _triggerChange() {
+          $rootScope.$broadcast('tasksChanged');
         }
         
         return {
           add: add,
           'delete': deleteTask,
-          clearCompleted: clearCompleted
+          clearCompleted: clearCompleted,
+          getAll: getAll
         }
       })
       
@@ -145,12 +154,21 @@
         $scope.clearCompleted = TasksService.clearCompleted;
 
         $scope.$watch('filter', function() {
-          $rootScope.filter = $scope.filter;
+          $rootScope.$broadcast('filterChanged', {filter: $scope.filter });
         });
       })
       
       .controller('TaskListController', function($scope, TasksService) {
+        $scope.tasks = TasksService.getAll();
         $scope.delete = TasksService.delete;
+        
+        $scope.$on('tasksChanged', function() {
+          $scope.tasks = TasksService.getAll();
+        })
+
+        $scope.$on('filterChanged', function(evt, args) {
+          $scope.filter = args.filter;
+        })
       })
       
       .controller('AddTaskController', function($scope, TasksService) {
