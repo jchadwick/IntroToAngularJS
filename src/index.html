@@ -34,7 +34,10 @@
 
 </head>
 
-<body>
+<body ng-app="TodoApp" ng-init="tasks = [ 
+          { name: 'Incomplete task' }, 
+          { name: 'Second task'} 
+        ]">
 
   <div class="container">
 
@@ -50,10 +53,10 @@
         <div class="panel-heading clearfix">
           <div class="row">
             <div class="col-xs-7">
-              <input type="text" class="form-control" placeholder="Filter tasks by..." />
+              <input type="text" ng-model="filter" class="form-control" placeholder="Filter tasks by..." />
             </div>
             <div class="col-xs-3 col-xs-offset-2">
-              <button class="btn pull-right">Clear Completed</button>
+              <button class="btn pull-right" ng-click="clearCompleted()">Clear Completed</button>
             </div>
           </div>
         </div>
@@ -64,27 +67,19 @@
           <!-- Task List -->
           <ul class="list-group">
 
-            <!-- Active task template -->
-            <li class="list-group-item">
-              <span class="delete"><i class="fa fa-minus-square"></i></span>
-              <span class="status"><input type="checkbox"/></span>
-              <span class="name">Incomplete task</span>
-            </li>
-
-            <!-- Completed task template -->
-            <li class="list-group-item text-muted completed">
-              <span class="delete"><i class="fa fa-minus-square"></i></span>
-              <span class="status"><input type="checkbox" checked /></span>
-              <span class="name">Completed task</span>
+            <li class="list-group-item" ng-repeat="task in tasks | filter:{name:filter}" ng-class="{ completed: task.completed, 'text-muted': task.completed }">
+              <span class="delete" ng-click="tasks.splice(tasks.indexOf(task), 1)"><i class="fa fa-minus-square"></i></span>
+              <span class="status"><input type="checkbox" ng-model="task.completed"/></span>
+              <span class="name">{{task.name}}</span>
             </li>
 
           </ul>
 
           <!-- New Task input -->
-          <form>
+          <form ng-submit="tasks.push(newTask); newTask = {}">
             <label>Add new:</label>
-            <div class="input-group">
-              <input class="form-control" type="text" placeholder="Task description..." />
+            <div class="input-group" ng-init="newTask = {}">
+              <input class="form-control" ng-model="newTask.name" type="text" placeholder="Task description..." />
               <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary">Add</button>
               </span>
@@ -117,6 +112,27 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
   -->
   <script src="lib/angular/angular.min.js"></script>
+  <script type="text/javascript">
+    angular.module('TodoApp', [])
+      .run(function($rootScope) {
+        
+        function clearCompleted() {
+          
+          var tasks = $rootScope.tasks,
+              completed = tasks.filter(function(task) { 
+                return task.completed; 
+              });
+          
+          for(var i = 0; i < completed.length; i++) {
+              var index = tasks.indexOf(completed[i]);
+              tasks.splice(index, 1); 
+          }
+          
+        }
+        
+        $rootScope.clearCompleted = clearCompleted;
+      })
+  </script>
 </body>
 
 </html>
