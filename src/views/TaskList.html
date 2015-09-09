@@ -1,0 +1,9 @@
+<ul class="list-group" ng-controller="TaskListController">
+
+	<li class="list-group-item" ng-repeat="task in tasks | filter:{name:filter}" ng-class="{ completed: task.completed, 'text-muted': task.completed }">
+		<span class="delete" ng-click="delete(task)"><i class="fa fa-minus-square"></i></span>
+		<span class="status"><input type="checkbox" ng-model="task.completed"/></span>
+		<span class="name">{{task.name}}</span>
+	</li>
+
+</ul>
